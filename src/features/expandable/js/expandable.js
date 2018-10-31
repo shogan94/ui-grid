@@ -616,8 +616,19 @@
             gridUtil.logDebug($elm);
 
             gridUtil.logDebug($elm.children());
-            var index = $elm.children().length > 1 ? 1 : 0;
-            var rowRepeatDiv = angular.element($elm.children()[index].children()[0]),
+
+            var children = angular.element($elm.children());
+            var child = {};
+            if (children.length > 1) {
+              gridUtil.logDebug('Length is greater than one');
+              child = children[1];
+              gridUtil.logDebug(child);
+            }else {
+              gridUtil.logDebug('Only one child');
+              child = children;
+              gridUtil.logDebug(child);
+            }
+            var rowRepeatDiv = angular.element(child.children()[0]),
               expandedRowFillerElement = $templateCache.get('ui-grid/expandableScrollFiller'),
               expandedRowElement = $templateCache.get('ui-grid/expandableRow');
 
