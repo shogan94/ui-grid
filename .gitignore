@@ -159,7 +159,13 @@ Desktop.ini
 # Packages
 *.egg
 *.egg-info
-dist
+dist/bootstrap
+dist/css
+dist/customizer
+dist/data
+dist/docs
+dist/js
+dist/less
 eggs
 parts
 bin

@@ -57,7 +57,6 @@ For better performance with the following example, you can choose to load the ui
       var vm = this;
 
       vm.gridOptions = {
-        expandableRowTemplate: 'expandableRowTemplate.html',
         expandableRowHeight: 150,
         //subGridVariable will be available in subGrid scope
         expandableRowScope: {
@@ -101,105 +100,6 @@ For better performance with the following example, you can choose to load the ui
           vm.gridOptions.showExpandAllButton = !vm.gridOptions.showExpandAllButton;
         };
     });
-
-    app.controller('SecondCtrl', function SecondCtrl($http, $log) {
-						var vm = this;
-
-						vm.gridOptions = {
-								enableRowSelection: true,
-								expandableRowTemplate: 'expandableRowTemplate.html',
-								expandableRowHeight: 150
-						}
-
-						vm.gridOptions.columnDefs = [
-								{ name: 'id', pinnedLeft:true },
-								{ name: 'name'},
-								{ name: 'age'},
-								{ name: 'address.city'}
-						];
-
-						$http.get('/data/500_complex.json')
-								.then(function(response) {
-										var data = response.data;
-
-										for(i = 0; i < data.length; i++) {
-												data[i].subGridOptions = {
-														columnDefs: [{name: 'Id', field: 'id'}, {name: 'Name', field: 'name'}],
-														data: data[i].friends
-												};
-										}
-										vm.gridOptions.data = data;
-								});
-				});
-
-    app.controller('ThirdCtrl', function ThirdCtrl($scope, $http, $log) {
-						var vm = this;
-
-						vm.gridOptions = {
-								expandableRowTemplate: 'expandableRowTemplate.html',
-								expandableRowHeight: 150,
-								onRegisterApi: function (gridApi) {
-										gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {
-												if (row.isExpanded) {
-														row.entity.subGridOptions = {
-																columnDefs: [
-																{ name: 'name'},
-																{ name: 'gender'},
-																{ name: 'company'}
-														]};
-
-														$http.get('/data/100.json')
-																.then(function(response) {
-																		row.entity.subGridOptions.data = response.data;
-																});
-												}
-										});
-								}
-						};
-
-						vm.gridOptions.columnDefs = [
-								{ name: 'id', pinnedLeft:true },
-								{ name: 'name'},
-								{ name: 'age'},
-								{ name: 'address.city'}
-						];
-
-						$http.get('/data/500_complex.json')
-								.then(function(response) {
-										vm.gridOptions.data = response.data;
-								});
-				});
-
-    app.controller('FourthCtrl', function FourthCtrl($http, $log) {
-						var vm = this;
-
-						vm.gridOptions = {
-								enableRowSelection: true,
-								expandableRowTemplate: 'expandableRowTemplate.html',
-								expandableRowHeight: 150
-						};
-
-						vm.gridOptions.columnDefs = [
-								{ name: 'id', pinnedLeft:true },
-								{ name: 'name'},
-								{ name: 'age'},
-								{ name: 'address.city'}
-						];
-
-						$http.get('/data/500_complex.json')
-								.then(function(response) {
-										var data = response.data;
-
-										for(i = 0; i < data.length; i++) {
-												data[i].subGridOptions = {
-														columnDefs: [{name: 'Id', field: 'id'}, {name: 'Name', field: 'name'}],
-														data: data[i].friends,
-														disableRowExpandable : (i % 2 === 0)
-												};
-										}
-										vm.gridOptions.data = data;
-								});
-				});
   </file>
   <file name="index.html">
     <div ng-controller="MainCtrl as main">

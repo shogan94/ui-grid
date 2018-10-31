@@ -83,18 +83,7 @@
     "semver": "^5.5.0",
     "shelljs": "^0.8.2",
     "time-grunt": "^1.4.0",
-    "validate-commit-message": "^3.0.1",
     "webdriver-manager": "^12.1.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    },
-    "ghooks": {
-      "commit-msg": "validate-commit-msg",
-      "post-merge": "npm install",
-      "post-rewrite": "npm install"
-    }
   },
   "dependencies": {}
 }
