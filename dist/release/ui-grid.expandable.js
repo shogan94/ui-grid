@@ -1,5 +1,5 @@
 /*!
- * ui-grid - v4.6.4-e977e81b - 2018-10-31
+ * ui-grid - v4.6.4-f1a8e063 - 2018-10-31
  * Copyright (c) 2018 ; License: MIT 
  */
 
@@ -31,7 +31,7 @@
   module.service('uiGridExpandableService', ['gridUtil', function (gridUtil) {
     var service = {
       initializeGrid: function (grid) {
-        gridUtil.logDebug('Initializing Grid...');
+
         grid.expandable = {};
         grid.expandable.expandedAll = false;
 
@@ -62,7 +62,7 @@
          *  </pre>
          */
         grid.options.enableExpandable = grid.options.enableExpandable !== false;
-        gridUtil.logDebug('grid.options.enableExpandable = ' + grid.options.enableExpandable);
+
         /**
          *  @ngdoc object
          *  @name showExpandAllButton
@@ -77,7 +77,6 @@
          *  </pre>
          */
         grid.options.showExpandAllButton = grid.options.showExpandAllButton !== false;
-        gridUtil.logDebug(' grid.options.showExpandAllButton = ' +  grid.options.showExpandAllButton);
 
         /**
          *  @ngdoc object
@@ -108,22 +107,22 @@
          */
         grid.options.expandableRowHeaderWidth = grid.options.expandableRowHeaderWidth || 40;
 
-        // /**
-        //  *  @ngdoc object
-        //  *  @name expandableRowTemplate
-        //  *  @propertyOf  ui.grid.expandable.api:GridOptions
-        //  *  @description Mandatory. The template for your expanded row
-        //  *  @example
-        //  *  <pre>
-        //  *    $scope.gridOptions = {
-        //  *      expandableRowTemplate: 'expandableRowTemplate.html'
-        //  *    }
-        //  *  </pre>
-        //  */
-        // if ( grid.options.enableExpandable && !grid.options.expandableRowTemplate ) {
-        //   gridUtil.logError( 'You have not set the expandableRowTemplate, disabling expandable module' );
-        //   grid.options.enableExpandable = false;
-        // }
+        /**
+         *  @ngdoc object
+         *  @name expandableRowTemplate
+         *  @propertyOf  ui.grid.expandable.api:GridOptions
+         *  @description Mandatory. The template for your expanded row
+         *  @example
+         *  <pre>
+         *    $scope.gridOptions = {
+         *      expandableRowTemplate: 'expandableRowTemplate.html'
+         *    }
+         *  </pre>
+         */
+        if ( grid.options.enableExpandable && !grid.options.expandableRowTemplate ) {
+          gridUtil.logError( 'You have not set the expandableRowTemplate, disabling expandable module' );
+          grid.options.enableExpandable = false;
+        }
 
         /**
          *  @ngdoc object
@@ -208,9 +207,6 @@
                 var row = grid.getRow(rowEntity);
 
                 if (row !== null) {
-                  gridUtil.logDebug('Toggling non null row:');
-                  gridUtil.logDebug(rowEntity);
-                  gridUtil.logDebug(e);
                   service.toggleRowExpansion(grid, row, e);
                 }
               },
@@ -264,9 +260,6 @@
                 var row = grid.getRow(rowEntity);
 
                 if (row !== null && !row.isExpanded) {
-                  gridUtil.logDebug(' Expanding row ');
-                  gridUtil.logDebug(row);
-
                   service.toggleRowExpansion(grid, row);
                 }
               },
@@ -404,8 +397,8 @@
    *  </pre>
    */
 
-  module.directive('uiGridExpandable', ['uiGridExpandableService', '$templateCache', 'gridUtil',
-    function (uiGridExpandableService, $templateCache, gridUtil) {
+  module.directive('uiGridExpandable', ['uiGridExpandableService', '$templateCache',
+    function (uiGridExpandableService, $templateCache) {
       return {
         replace: true,
         priority: 0,
@@ -417,7 +410,6 @@
               uiGridExpandableService.initializeGrid(uiGridCtrl.grid);
 
               if (!uiGridCtrl.grid.options.enableExpandable) {
-                gridUtil.logDebug('Retuning because enableExpandable is false');
                 return;
               }
 
@@ -448,47 +440,47 @@
    *  @description stacks on the uiGrid directive to register child grid with parent row when child is created
    */
   module.directive('uiGrid',
-    function () {
-      return {
-        replace: true,
-        priority: 599,
-        require: '^uiGrid',
-        scope: false,
-        compile: function () {
-          return {
-            pre: function ($scope, $elm, $attrs, uiGridCtrl) {
+      function () {
+        return {
+          replace: true,
+          priority: 599,
+          require: '^uiGrid',
+          scope: false,
+          compile: function () {
+            return {
+              pre: function ($scope, $elm, $attrs, uiGridCtrl) {
 
-              uiGridCtrl.grid.api.core.on.renderingComplete($scope, function() {
-                // if a parent grid row is on the scope, then add the parentRow property to this childGrid
-                if ($scope.row && $scope.row.grid && $scope.row.grid.options
-                  && $scope.row.grid.options.enableExpandable) {
+                uiGridCtrl.grid.api.core.on.renderingComplete($scope, function() {
+                  // if a parent grid row is on the scope, then add the parentRow property to this childGrid
+                  if ($scope.row && $scope.row.grid && $scope.row.grid.options
+                      && $scope.row.grid.options.enableExpandable) {
 
-                  /**
-                   *  @ngdoc directive
-                   *  @name ui.grid.expandable.class:Grid
-                   *  @description Additional Grid properties added by expandable module
-                   */
+                    /**
+                     *  @ngdoc directive
+                     *  @name ui.grid.expandable.class:Grid
+                     *  @description Additional Grid properties added by expandable module
+                     */
 
-                  /**
-                   *  @ngdoc object
-                   *  @name parentRow
-                   *  @propertyOf ui.grid.expandable.class:Grid
-                   *  @description reference to the expanded parent row that owns this grid
-                   */
-                  uiGridCtrl.grid.parentRow = $scope.row;
+                    /**
+                     *  @ngdoc object
+                     *  @name parentRow
+                     *  @propertyOf ui.grid.expandable.class:Grid
+                     *  @description reference to the expanded parent row that owns this grid
+                     */
+                    uiGridCtrl.grid.parentRow = $scope.row;
 
-                  // todo: adjust height on parent row when child grid height changes. we need some sort of gridHeightChanged event
-                 // uiGridCtrl.grid.core.on.canvasHeightChanged($scope, function(oldHeight, newHeight) {
-                 //   uiGridCtrl.grid.parentRow = newHeight;
-                 // });
-                }
-              });
-            },
-            post: function ($scope, $elm, $attrs, uiGridCtrl) {}
-          };
-        }
-      };
-    });
+                    // todo: adjust height on parent row when child grid height changes. we need some sort of gridHeightChanged event
+                    // uiGridCtrl.grid.core.on.canvasHeightChanged($scope, function(oldHeight, newHeight) {
+                    //   uiGridCtrl.grid.parentRow = newHeight;
+                    // });
+                  }
+                });
+              },
+              post: function ($scope, $elm, $attrs, uiGridCtrl) {}
+            };
+          }
+        };
+      });
 
   /**
    *  @ngdoc directive
@@ -496,64 +488,58 @@
    *  @description directive to render the Row template on Expand
    */
   module.directive('uiGridExpandableRow',
-  ['uiGridExpandableService', '$compile', 'uiGridConstants','gridUtil',
-    function (uiGridExpandableService, $compile, uiGridConstants, gridUtil) {
+      ['uiGridExpandableService', '$compile', 'uiGridConstants','gridUtil',
+        function (uiGridExpandableService, $compile, uiGridConstants, gridUtil) {
 
-      return {
-        replace: false,
-        priority: 0,
-        scope: false,
-        compile: function () {
           return {
-            pre: function ($scope, $elm) {
-              gridUtil.getTemplate('<div ui-grid="row.entity.subGridOptions" style="height:150px;"></div>').then(
-                function (template) {
-                  gridUtil.logDebug('Just got template: ' + template);
-                  gridUtil.logDebug(template);
-                  if ($scope.grid.options.expandableRowScope) {
-                    /**
-                     *  @ngdoc object
-                     *  @name expandableRowScope
-                     *  @propertyOf  ui.grid.expandable.api:GridOptions
-                     *  @description  Variables of object expandableScope will be available in the scope of the expanded subgrid
-                     *  @example
-                     *  <pre>
-                     *    $scope.gridOptions = {
-                     *      expandableRowScope: expandableScope
-                     *    }
-                     *  </pre>
-                     */
-                    var expandableRowScope = $scope.grid.options.expandableRowScope;
+            replace: false,
+            priority: 0,
+            scope: false,
+            compile: function () {
+              return {
+                pre: function ($scope, $elm) {
+                  gridUtil.getTemplate($scope.grid.options.expandableRowTemplate).then(
+                      function (template) {
+                        if ($scope.grid.options.expandableRowScope) {
+                          /**
+                           *  @ngdoc object
+                           *  @name expandableRowScope
+                           *  @propertyOf  ui.grid.expandable.api:GridOptions
+                           *  @description  Variables of object expandableScope will be available in the scope of the expanded subgrid
+                           *  @example
+                           *  <pre>
+                           *    $scope.gridOptions = {
+                           *      expandableRowScope: expandableScope
+                           *    }
+                           *  </pre>
+                           */
+                          var expandableRowScope = $scope.grid.options.expandableRowScope;
 
-                    for (var property in expandableRowScope) {
-                      if (expandableRowScope.hasOwnProperty(property)) {
-                        $scope[property] = expandableRowScope[property];
-                      }
-                    }
-                  }
-                  var expandedRowElement = angular.element(template);
+                          for (var property in expandableRowScope) {
+                            if (expandableRowScope.hasOwnProperty(property)) {
+                              $scope[property] = expandableRowScope[property];
+                            }
+                          }
+                        }
+                        var expandedRowElement = angular.element(template);
 
-                  expandedRowElement = $compile(expandedRowElement)($scope);
-                  $elm.append(expandedRowElement);
+                        expandedRowElement = $compile(expandedRowElement)($scope);
+                        $elm.append(expandedRowElement);
+                        $scope.row.element = $elm;
+                        $scope.row.expandedRendered = true;
+                      });
+                },
+
+                post: function ($scope, $elm) {
                   $scope.row.element = $elm;
-                  $scope.row.expandedRendered = true;
-                  gridUtil.logDebug('epxnadedRowElement');
-                  gridUtil.logDebug(expandedRowElement);
-                  gridUtil.logDebug($scope.row);
-              });
-            },
-
-            post: function ($scope, $elm) {
-              $scope.row.element = $elm;
-              $scope.$on('$destroy', function() {
-                gridUtil.logError('Destroying ');
-                $scope.row.expandedRendered = false;
-              });
+                  $scope.$on('$destroy', function() {
+                    $scope.row.expandedRendered = false;
+                  });
+                }
+              };
             }
           };
-        }
-      };
-    }]);
+        }]);
 
   /**
    *  @ngdoc directive
@@ -576,16 +562,16 @@
 
                 $scope.expandableRow.shouldRenderExpand = function () {
                   return $scope.colContainer.name === 'body'
-                    && $scope.grid.options.enableExpandable !== false
-                    && $scope.row.isExpanded
-                    && (!$scope.grid.isScrollingVertically || $scope.row.expandedRendered);
+                      && $scope.grid.options.enableExpandable !== false
+                      && $scope.row.isExpanded
+                      && (!$scope.grid.isScrollingVertically || $scope.row.expandedRendered);
                 };
 
                 $scope.expandableRow.shouldRenderFiller = function () {
                   return $scope.row.isExpanded
-                    && (
-                      $scope.colContainer.name !== 'body'
-                      || ($scope.grid.isScrollingVertically && !$scope.row.expandedRendered));
+                      && (
+                          $scope.colContainer.name !== 'body'
+                          || ($scope.grid.isScrollingVertically && !$scope.row.expandedRendered));
                 };
 
                 if ($scope.grid.options.enableOnDblClickExpand) {
@@ -610,49 +596,31 @@
    *  default gridRow template
    */
   module.directive('uiGridViewport',
-    ['$compile', 'gridUtil', '$templateCache',
-      function ($compile, gridUtil, $templateCache) {
-        return {
-          priority: -199,
-          scope: false,
-          compile: function ($elm) {
+      ['$compile', 'gridUtil', '$templateCache',
+        function ($compile, gridUtil, $templateCache) {
+          return {
+            priority: -199,
+            scope: false,
+            compile: function ($elm) {
 
-            gridUtil.logDebug('$elm: ');
-            gridUtil.logDebug($elm);
+              // todo: this adds ng-if watchers to each row even if the grid is not using expandable directive
+              //      or options.enableExpandable == false
+              //      The alternative is to compile the template and append to each row in a uiGridRow directive
 
-            gridUtil.logDebug($elm.children());
+              var rowRepeatDiv = angular.element($elm.children().children()[0]),
+                  expandedRowFillerElement = $templateCache.get('ui-grid/expandableScrollFiller'),
+                  expandedRowElement = $templateCache.get('ui-grid/expandableRow');
 
-            var children = angular.element($elm.children());
-            var child = {};
-            if (children.length > 1) {
-              gridUtil.logDebug('Length is greater than one');
-              child = children[1];
-            }else {
-              gridUtil.logDebug('Only one child');
-              child = children;
+              rowRepeatDiv.append(expandedRowElement);
+              rowRepeatDiv.append(expandedRowFillerElement);
+              return {
+                pre: function ($scope, $elm, $attrs, controllers) {
+                },
+                post: function ($scope, $elm, $attrs, controllers) {
+                }
+              };
             }
-            gridUtil.logDebug(child);
-            var rowRepeatDiv = angular.element(child.children()[0]),
-              expandedRowFillerElement = $templateCache.get('ui-grid/expandableScrollFiller'),
-              expandedRowElement = $templateCache.get('ui-grid/expandableRow');
-
-            gridUtil.logDebug(rowRepeatDiv);
-            gridUtil.logDebug('Appending expandedRowElement Template');
-            gridUtil.logDebug(expandedRowElement);
-
-            rowRepeatDiv.append(expandedRowElement);
-            rowRepeatDiv.append(expandedRowFillerElement);
-
-            gridUtil.logDebug('rowRepeatDiv after append');
-            gridUtil.logDebug(rowRepeatDiv);
-            return {
-              pre: function ($scope, $elm, $attrs, controllers) {
-              },
-              post: function ($scope, $elm, $attrs, controllers) {
-              }
-            };
-          }
-        };
-      }]);
+          };
+        }]);
 
 })();
