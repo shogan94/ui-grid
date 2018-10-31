@@ -62,7 +62,7 @@ workbench/bootstrap*
 web.config
 # Build results
 [Dd]ebug/
-[Rr]elease/
+#[Rr]elease/
 *_i.c
 *_p.c
 *.ilk
@@ -163,14 +163,13 @@ dist/bootstrap
 dist/css
 dist/customizer
 dist/data
-dist/docs
 dist/js
 dist/less
 eggs
 parts
 bin
 var
-sdist
+
 develop-eggs
 .installed.cfg
 
