@@ -608,16 +608,16 @@
     ['$compile', 'gridUtil', '$templateCache',
       function ($compile, gridUtil, $templateCache) {
         return {
-          priority: -200,
+          priority: -199,
           scope: false,
           compile: function ($elm) {
 
             gridUtil.logDebug('$elm: ');
             gridUtil.logDebug($elm);
 
-            gridUtil.logDebug($elm.children);
+            gridUtil.logDebug($elm.children());
 
-            var children = angular.element($elm.children);
+            var children = angular.element($elm.children());
             var child = {};
             if (children.length > 1) {
               gridUtil.logDebug('Length is greater than one');

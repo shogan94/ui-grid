@@ -1,5 +1,5 @@
 /*!
- * ui-grid - v4.6.4-990049cf - 2018-10-31
+ * ui-grid - v4.6.4-e977e81b - 2018-10-31
  * Copyright (c) 2018 ; License: MIT 
  */
 
@@ -18847,16 +18847,16 @@ module.filter('px', function() {
     ['$compile', 'gridUtil', '$templateCache',
       function ($compile, gridUtil, $templateCache) {
         return {
-          priority: -200,
+          priority: -199,
           scope: false,
           compile: function ($elm) {
 
             gridUtil.logDebug('$elm: ');
             gridUtil.logDebug($elm);
 
-            gridUtil.logDebug($elm.children);
+            gridUtil.logDebug($elm.children());
 
-            var children = angular.element($elm.children);
+            var children = angular.element($elm.children());
             var child = {};
             if (children.length > 1) {
               gridUtil.logDebug('Length is greater than one');
