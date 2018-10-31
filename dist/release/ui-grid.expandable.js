@@ -1,5 +1,5 @@
 /*!
- * ui-grid - v4.6.4-f9209344 - 2018-10-31
+ * ui-grid - v4.6.4-f12630ba - 2018-10-31
  * Copyright (c) 2018 ; License: MIT 
  */
 
@@ -206,10 +206,11 @@
                */
               toggleRowExpansion: function (rowEntity, e) {
                 var row = grid.getRow(rowEntity);
-                gridUtil.logDebug('Toggling row: ' + row);
 
                 if (row !== null) {
-                  gridUtil.logDebug('Toggling non null row:' + e);
+                  gridUtil.logDebug('Toggling non null row:');
+                  gridUtil.logDebug(rowEntity);
+                  gridUtil.logDebug(e);
                   service.toggleRowExpansion(grid, row, e);
                 }
               },
@@ -616,20 +617,22 @@
           scope: false,
           compile: function ($elm) {
 
-             // todo: this adds ng-if watchers to each row even if the grid is not using expandable directive
-             //      or options.enableExpandable == false
-             //      The alternative is to compile the template and append to each row in a uiGridRow directive
-
             gridUtil.logDebug('$elm: ');
             gridUtil.logDebug($elm);
-            var rowRepeatDiv = angular.element($elm.children().children()[0]),
+
+            gridUtil.logDebug($elm.children());
+            var index = $elm.children().length > 1 ? 1 : 0;
+            var rowRepeatDiv = angular.element($elm.children()[index].children()[0]),
               expandedRowFillerElement = $templateCache.get('ui-grid/expandableScrollFiller'),
               expandedRowElement = $templateCache.get('ui-grid/expandableRow');
-gridUtil.logDebug(rowRepeatDiv);
+
+            gridUtil.logDebug(rowRepeatDiv);
             gridUtil.logDebug('Appending expandedRowElement Template');
             gridUtil.logDebug(expandedRowElement);
+
             rowRepeatDiv.append(expandedRowElement);
             rowRepeatDiv.append(expandedRowFillerElement);
+
             gridUtil.logDebug('rowRepeatDiv after append');
             gridUtil.logDebug(rowRepeatDiv);
             return {

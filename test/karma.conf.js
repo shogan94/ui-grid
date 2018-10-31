@@ -29,7 +29,7 @@ module.exports = function(config) {
       'test/unit/**/*.spec.js',
       'src/features/**/test/**/*.spec.js',
 
-      'dist/release/ui-grid.css',
+      '../release/ui-grid.css',
 
       '.tmp/template.js' // templates
     ],
