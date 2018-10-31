@@ -1,5 +1,5 @@
 /*!
- * ui-grid - v4.6.4-b0fc1eb2 - 2018-10-31
+ * ui-grid - v4.6.4-f9209344 - 2018-10-31
  * Copyright (c) 2018 ; License: MIT 
  */
 
@@ -630,7 +630,7 @@ gridUtil.logDebug(rowRepeatDiv);
             gridUtil.logDebug(expandedRowElement);
             rowRepeatDiv.append(expandedRowElement);
             rowRepeatDiv.append(expandedRowFillerElement);
-            gridUtil.log('rowRepeatDiv after append');
+            gridUtil.logDebug('rowRepeatDiv after append');
             gridUtil.logDebug(rowRepeatDiv);
             return {
               pre: function ($scope, $elm, $attrs, controllers) {

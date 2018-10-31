@@ -625,7 +625,7 @@ gridUtil.logDebug(rowRepeatDiv);
             gridUtil.logDebug(expandedRowElement);
             rowRepeatDiv.append(expandedRowElement);
             rowRepeatDiv.append(expandedRowFillerElement);
-            gridUtil.log('rowRepeatDiv after append');
+            gridUtil.logDebug('rowRepeatDiv after append');
             gridUtil.logDebug(rowRepeatDiv);
             return {
               pre: function ($scope, $elm, $attrs, controllers) {
